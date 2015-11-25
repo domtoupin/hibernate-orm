@@ -66,7 +66,7 @@ public class SchemaValidatorImpl implements SchemaValidator {
 			throw new SchemaManagementException(
 					String.format(
 							"Schema-validation: missing table [%s]",
-							table.getName()
+							table.getQualifiedTableName().toString()
 					)
 			);
 		}
@@ -85,7 +85,7 @@ public class SchemaValidatorImpl implements SchemaValidator {
 						String.format(
 								"Schema-validation: missing column [%s] in table [%s]",
 								column.getName(),
-								table.getName()
+								table.getQualifiedTableName()
 						)
 				);
 			}
@@ -106,7 +106,7 @@ public class SchemaValidatorImpl implements SchemaValidator {
 							"Schema-validation: wrong column type encountered in column [%s] in " +
 									"table [%s]; found [%s (Types#%s)], but expecting [%s (Types#%s)]",
 							column.getName(),
-							table.getName(),
+							table.getQualifiedTableName(),
 							columnInformation.getTypeName().toLowerCase(Locale.ROOT),
 							JdbcTypeNameMapper.getTypeName( columnInformation.getTypeCode() ),
 							column.getSqlType().toLowerCase(Locale.ROOT),
