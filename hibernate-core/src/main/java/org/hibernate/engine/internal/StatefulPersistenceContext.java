@@ -79,6 +79,10 @@ public class StatefulPersistenceContext implements PersistenceContext {
 			CoreMessageLogger.class,
 			StatefulPersistenceContext.class.getName()
 	);
+	private static final CoreMessageLogger PROXYWARNLOG = Logger.getMessageLogger(
+			CoreMessageLogger.class,
+			StatefulPersistenceContext.class.getName() + ".ProxyWarnLog"
+	);
 
 	private static final boolean TRACE_ENABLED = LOG.isTraceEnabled();
 	private static final int INIT_COLL_SIZE = 8;
@@ -658,7 +662,7 @@ public class StatefulPersistenceContext implements PersistenceContext {
 		final boolean alreadyNarrow = concreteProxyClass.isInstance( proxy );
 
 		if ( !alreadyNarrow ) {
-			LOG.narrowingProxy( concreteProxyClass );
+			PROXYWARNLOG.narrowingProxy( concreteProxyClass );
 
 			// If an impl is passed, there is really no point in creating a proxy.
 			// It would just be extra processing.  Just return the impl
