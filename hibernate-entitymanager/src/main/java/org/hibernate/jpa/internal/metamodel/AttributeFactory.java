@@ -11,6 +11,7 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.TypeVariable;
+import java.lang.reflect.WildcardType;
 import java.util.Iterator;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
@@ -867,6 +868,12 @@ public class AttributeFactory {
 			}
 			else if ( type instanceof ParameterizedType ) {
 				final java.lang.reflect.Type rawType = ( (ParameterizedType) type ).getRawType();
+				return getClassFromGenericArgument( rawType );
+			}
+			else if ( type instanceof WildcardType ) {
+				//guaranteed to always have at least 1 element
+				//no support for multiple upper bounds
+				final java.lang.reflect.Type rawType = ( (WildcardType) type ).getUpperBounds()[0];
 				return getClassFromGenericArgument( rawType );
 			}
 			else {
