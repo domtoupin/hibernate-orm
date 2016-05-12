@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.Set;
 
 import org.hibernate.HibernateException;
@@ -26,6 +27,7 @@ import org.hibernate.engine.spi.RowSelection;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.event.spi.EventSource;
+import org.hibernate.hql.ast.HqlAstTransformer;
 import org.hibernate.hql.internal.QueryExecutionRequestException;
 import org.hibernate.hql.internal.antlr.HqlSqlTokenTypes;
 import org.hibernate.hql.internal.antlr.HqlTokenTypes;
@@ -257,6 +259,11 @@ public class QueryTranslatorImpl implements FilterTranslator {
 	private HqlSqlWalker analyze(HqlParser parser, String collectionRole) throws QueryException, RecognitionException {
 		final HqlSqlWalker w = new HqlSqlWalker( this, factory, parser, tokenReplacements, collectionRole );
 		final AST hqlAst = parser.getAST();
+
+		ServiceLoader<HqlAstTransformer> hqlAstTransformers = ServiceLoader.load( HqlAstTransformer.class );
+		Iterator<HqlAstTransformer> iterator = hqlAstTransformers.iterator();
+		while (iterator.hasNext())
+			iterator.next().transform( hqlAst );
 
 		// Transform the tree.
 		w.statement( hqlAst );
